@@ -242,3 +242,7 @@ Planned future topics include:
 # Related Content
 
 Additional project updates and implementation details are periodically shared on LinkedIn.
+
+
+
+![Cluster](./images/cluster_setup.jpg)
