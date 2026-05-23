@@ -55,10 +55,10 @@ This platform is intentionally separated into multiple repositories in order to 
 
 | Repository | Purpose | Status |
 |---|---|---|
-| [`raspi-k3s-ansible`](https://github.com/MyProgrammingProjects/raspi-k3s-ansible) | Infrastructure automation and node provisioning | In Progress |
-| [`raspi-k3s-jenkins`](#) | Jenkins configuration and CI/CD experimentation | In Progress |
-| [`raspi-k3s-applications`](#) | Sample applications deployed into the cluster | Planned |
-| [`raspi-k3s-helm-charts`](#) | Reusable Kubernetes Helm charts | Planned |
+| [`raspi-k3s-ansible`](https://github.com/MyProgrammingProjects/raspi-k3s-ansible) | Infrastructure automation and node provisioning | Completed |
+| [`raspi-k3s-jenkins`](https://github.com/MyProgrammingProjects/raspi-k3s-jenkins) | Jenkins configuration and CI/CD experimentation | In Progress |
+| [`raspi-k3s-applications`](#) | Sample applications deployed into the cluster | In Progress |
+| [`raspi-k3s-helm-charts`](#) | Reusable Kubernetes Helm charts | In Progress |
 | [`raspi-k3s-gitops`](#) | GitOps deployment state and Argo CD configuration | Planned |
 
 ---
@@ -96,12 +96,12 @@ Repository:
 | Task | Status |
 |---|---|
 | Jenkins deployment | In Progress |
-| Dynamic Kubernetes agents | Planned |
-| Container image pipelines | Planned |
-| Azure Container Registry integration | Planned |
+| Dynamic Kubernetes agents | In Progress |
+| Container image pipelines | In Progress |
+| Azure Container Registry integration | In Progress |
 
 Repository:
-- [`raspi-k3s-jenkins`](#)
+- [`raspi-k3s-jenkins`](https://github.com/MyProgrammingProjects/raspi-k3s-jenkins)
 
 ---
 
