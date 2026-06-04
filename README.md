@@ -166,13 +166,13 @@ Repository:
 
 | Task | Status |
 |---|---|
-| Argo CD installation | In Progress |
-| GitOps repository structure | In Progress |
-| Automated deployment reconciliation | In Progress |
+| Argo CD installation | Completed |
+| GitOps repository structure | Completed |
+| Automated deployment reconciliation | Completed |
 | Environment separation | Planned |
 
 Repository:
-- [`raspi-k3s-gitops`](#)
+- [`raspi-k3s-gitops`](https://github.com/MyProgrammingProjects/raspi-k3s-gitops)
 
 ---
 
