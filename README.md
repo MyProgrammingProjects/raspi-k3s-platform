@@ -102,7 +102,7 @@ This platform is intentionally separated into multiple repositories in order to 
 | [`raspi-k3s-jenkins`](https://github.com/MyProgrammingProjects/raspi-k3s-jenkins) | Jenkins configuration and CI/CD experimentation | Completed |
 | [`raspi-k3s-applications`](https://github.com/MyProgrammingProjects/raspi-k3s-applications) | Sample applications deployed into the cluster | Completed |
 | [`raspi-k3s-helm-charts`](https://github.com/MyProgrammingProjects/raspi-k3s-helm-charts)  | Reusable Kubernetes Helm charts | Completed |
-| [`raspi-k3s-gitops`](#) | GitOps deployment state and Argo CD configuration | In Progress |
+| [`raspi-k3s-gitops`](https://github.com/MyProgrammingProjects/raspi-k3s-gitops) | GitOps deployment state and Argo CD configuration | Completed |
 
 ---
 
