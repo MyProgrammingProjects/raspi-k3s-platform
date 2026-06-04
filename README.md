@@ -35,6 +35,49 @@ Hardware:
 
 ---
 
+# Platform Architecture
+
+The cluster exposes services externally through a Cloudflare Tunnel rather than opening inbound ports on the home network.
+
+External traffic enters Cloudflare, traverses the tunnel established by cloudflared, reaches the Kubernetes ingress layer, and is then routed to the Gateway API responsible for forwarding requests to backend services.
+
+This architecture provides:
+
+* Secure external access without port forwarding
+* Centralized request routing
+* Service isolation within the cluster
+* Internal-only backend services
+* A platform structure similar to production environments
+
+
+```txt
+Internet
+    │
+    ▼
+Cloudflare
+    │
+    ▼
+Cloudflare Tunnel (cloudflared)
+    │
+    ▼
+Ingress
+    │
+    ▼
+Gateway API
+    │
+    ├──► Users Service
+    │
+    ├──► Products Service
+    │
+    ├──► Orders Service
+    │
+    └──► Other Internal Services
+
+```
+
+
+---
+
 # Goals
 
 The primary objective is not simply "running Kubernetes at home".
@@ -56,10 +99,10 @@ This platform is intentionally separated into multiple repositories in order to 
 | Repository | Purpose | Status |
 |---|---|---|
 | [`raspi-k3s-ansible`](https://github.com/MyProgrammingProjects/raspi-k3s-ansible) | Infrastructure automation and node provisioning | Completed |
-| [`raspi-k3s-jenkins`](https://github.com/MyProgrammingProjects/raspi-k3s-jenkins) | Jenkins configuration and CI/CD experimentation | In Progress |
-| [`raspi-k3s-applications`](#) | Sample applications deployed into the cluster | In Progress |
-| [`raspi-k3s-helm-charts`](#) | Reusable Kubernetes Helm charts | In Progress |
-| [`raspi-k3s-gitops`](#) | GitOps deployment state and Argo CD configuration | Planned |
+| [`raspi-k3s-jenkins`](https://github.com/MyProgrammingProjects/raspi-k3s-jenkins) | Jenkins configuration and CI/CD experimentation | Completed |
+| [`raspi-k3s-applications`](https://github.com/MyProgrammingProjects/raspi-k3s-applications) | Sample applications deployed into the cluster | Completed |
+| [`raspi-k3s-helm-charts`](https://github.com/MyProgrammingProjects/raspi-k3s-helm-charts)  | Reusable Kubernetes Helm charts | Completed |
+| [`raspi-k3s-gitops`](#) | GitOps deployment state and Argo CD configuration | In Progress |
 
 ---
 
@@ -95,13 +138,14 @@ Repository:
 
 | Task | Status |
 |---|---|
-| Jenkins deployment | In Progress |
-| Dynamic Kubernetes agents | In Progress |
-| Container image pipelines | In Progress |
-| Azure Container Registry integration | In Progress |
+| Jenkins deployment | Completed |
+| Dynamic Kubernetes agents | Completed |
+| Container image pipelines | Completed |
+| Azure Container Registry integration | Completed |
 
-Repository:
+Repositories:
 - [`raspi-k3s-jenkins`](https://github.com/MyProgrammingProjects/raspi-k3s-jenkins)
+- [`raspi-k3s-applications`](https://github.com/MyProgrammingProjects/raspi-k3s-applications)
 
 ---
 
@@ -109,12 +153,12 @@ Repository:
 
 | Task | Status |
 |---|---|
-| Helm chart structure | In Progress |
-| Environment parameterization | Planned |
-| Chart reuse strategy | Planned |
+| Helm chart structure | Completed |
+| Environment parameterization | Completed |
+| Chart reuse strategy | Completed |
 
 Repository:
-- [`raspi-k3s-helm-charts`](#)
+- [`raspi-k3s-helm-charts`](https://github.com/MyProgrammingProjects/raspi-k3s-helm-charts)
 
 ---
 
@@ -124,7 +168,7 @@ Repository:
 |---|---|
 | Argo CD installation | In Progress |
 | GitOps repository structure | In Progress |
-| Automated deployment reconciliation | Planned |
+| Automated deployment reconciliation | In Progress |
 | Environment separation | Planned |
 
 Repository:
@@ -136,8 +180,8 @@ Repository:
 
 | Task | Status |
 |---|---|
-| Ingress management | Planned |
-| TLS automation | Planned |
+| External TLS Management (Cloudflare) | Completed |
+| Ingress management | Completed |
 | Observability stack | Planned |
 | Prometheus metrics | Planned |
 | Centralized logging | Planned |
@@ -222,6 +266,67 @@ Current areas of work:
 - Helm chart standardization
 - GitOps repository design
 - Argo CD deployment workflows
+
+
+---
+
+# Validation
+
+The following screenshots demonstrate the platform operating end-to-end:
+
+- Successful Jenkins pipeline execution
+
+![Jenkins Pipelines](./images/jenkins_pipelines.png)
+![Jenkins Gateway Application Pipeline Stages](./images/jenkins_gateway_api_pipeline.png)
+![Jenkins Accounts API Pipeline Stages](./images/jenkins_accounts_api_pipeline.png)
+![Jenkins Search API Pipeline Stages](./images/jenkins_search_api_pipeline.png)
+![Jenkins Users API Pipeline Stages](./images/jenkins_users_api_pipeline.png)
+
+- Container image publication to Azure Container Registry
+
+![ACR Repositories](./images/acr_repositories.png)
+![ACR Gateway Container Image](./images/acr_gateway_image.png)
+![ACR Accounts Container Image](./images/acr_accounts_image.png)
+![ACR Search Container Image](./images/acr_search_image.png)
+![ACR Users Container Image](./images/acr_users_image.png)
+
+![Kubernetes](./images/kubernetes_pods_images_tags.png)
+
+- Kubernetes deployment rollout
+
+![Kubernetes](./images/kubernetes_pods.png)
+![Kubernetes](./images/kubernetes_argocd_pods_svc.png)
+
+- Internal service communication
+
+curl -X POST http://users-api-svc/api/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern4ame4","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+
+curl -X POST http://accounts-api-svc/api/account/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern4ame4","Password": "g!ycuWir3g!ycuWir3"}'
+
+curl -X GET http://search-api-svc/api/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
+
+
+- Gateway API request routing
+
+
+curl -X POST http://gateway-api-svc/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+
+curl -X POST http://gateway-api-svc/accounts/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3"}'
+
+curl -X GET http://gateway-api-svc/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
+
+
+
+- External access through Cloudflare Tunnel
+
+
+curl -X POST https://gateway.<hidden domain>/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+
+curl -X POST https://gateway.<hidden domain>/accounts/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3"}'
+
+curl -X GET https://gateway.<hidden domain>/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
+
+
 
 ---
 
