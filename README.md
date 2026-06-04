@@ -344,6 +344,17 @@ Planned future topics include:
 
 ---
 
+# Known Observations
+
+## Secret Management
+
+Application secrets are currently stored as standard Kubernetes Secret resources. While values are base64 encoded, they are not encrypted and should not be considered secure for storing sensitive information in Git repositories.
+
+Future improvements may include implementing Sealed Secrets, SOPS, or an External Secrets solution to ensure secret values are encrypted or retrieved from a dedicated secret management system before deployment.
+
+
+---
+
 # Related Content
 
 Additional project updates and implementation details are periodically shared on LinkedIn.
