@@ -63,7 +63,7 @@ Cloudflare Tunnel (cloudflared)
 Ingress
     │
     ▼
-Gateway API
+Gateway API (is an application, not kubernetes object)
     │
     ├──► Users Service
     │
