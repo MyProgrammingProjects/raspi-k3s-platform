@@ -320,11 +320,11 @@ curl -X GET http://gateway-api-svc/search/users -H "Accept: application/json" -H
 - External access through Cloudflare Tunnel
 
 
-curl -X POST https://gateway.<hidden domain>/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+curl -X POST https://gateway.hidden_domain/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
 
-curl -X POST https://gateway.<hidden domain>/accounts/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3"}'
+curl -X POST https://gateway.hidden_domain/accounts/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3"}'
 
-curl -X GET https://gateway.<hidden domain>/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
+curl -X GET https://gateway.hidden_domain/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
 
 
 
