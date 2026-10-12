@@ -274,59 +274,97 @@ Current areas of work:
 
 The following screenshots demonstrate the platform operating end-to-end:
 
-- Successful Jenkins pipeline execution
+## Successful Jenkins pipeline execution
 
 ![Jenkins Pipelines](./images/jenkins_pipelines.png)
-![Jenkins Gateway Application Pipeline Stages](./images/jenkins_gateway_api_pipeline.png)
-![Jenkins Accounts API Pipeline Stages](./images/jenkins_accounts_api_pipeline.png)
-![Jenkins Search API Pipeline Stages](./images/jenkins_search_api_pipeline.png)
-![Jenkins Users API Pipeline Stages](./images/jenkins_users_api_pipeline.png)
+![Jenkins Gateway Application Pipeline Stages](./images/jenkins_gateway_api_pipeline_v2.png)
+![Jenkins Accounts API Pipeline Stages](./images/jenkins_accounts_api_pipeline_v2.png)
+![Jenkins Search API Pipeline Stages](./images/jenkins_search_api_pipeline_v2.png)
+![Jenkins Users API Pipeline Stages](./images/jenkins_users_api_pipeline_v2.png)
 
-- Container image publication to Azure Container Registry
+## Container image publication to Azure Container Registry
 
 ![ACR Repositories](./images/acr_repositories.png)
-![ACR Gateway Container Image](./images/acr_gateway_image.png)
-![ACR Accounts Container Image](./images/acr_accounts_image.png)
-![ACR Search Container Image](./images/acr_search_image.png)
-![ACR Users Container Image](./images/acr_users_image.png)
+![ACR Gateway Container Image](./images/acr_gateway_image_v2.png)
+![ACR Accounts Container Image](./images/acr_accounts_image_v2.png)
+![ACR Search Container Image](./images/acr_search_image_v2.png)
+![ACR Users Container Image](./images/acr_users_image_v2.png)
 
-![Kubernetes](./images/kubernetes_pods_images_tags.png)
+The following image show that kubernetes pods show the images present in the Azure Container Registry
 
-- Kubernetes deployment rollout
+![Kubernetes](./images/kubernetes_pods_images_tags_v2.png)
 
-![Kubernetes](./images/kubernetes_pods.png)
-![Kubernetes](./images/kubernetes_argocd_pods_svc.png)
+## Kubernetes deployment rollout
 
-- Internal service communication
+List of the four APIs related pods and services, present in the _prod_ namespace
 
+![Kubernetes](./images/kubernetes_pods_v2.png)
+
+List of the Cloudflare tunnel pod
+
+![Kubernetes](./images/kubernetes_cloudflare_pods.png)
+
+List of the Argo CD related pods and services, present in the _argocd_ namespace
+
+![Kubernetes](./images/kubernetes_argocd_pods_svc_v2.png)
+
+List of the Argo CD created projects, to implement guardrails instead of using the _default_ argocd project.
+
+![Kubernetes](./images/kubernetes_argocd_projects.png)
+
+List of the Argo CD created applications showing the used Argo CD projects
+
+![Kubernetes](./images/kubernetes_argocd_applications.png)
+
+
+## Communication Tests 
+
+### Internal direct service communication
+
+
+```txt
 curl -X POST http://users-api-svc/api/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern4ame4","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+```
 
+```txt
 curl -X POST http://accounts-api-svc/api/account/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern4ame4","Password": "g!ycuWir3g!ycuWir3"}'
+```
 
+```txt
 curl -X GET http://search-api-svc/api/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
+```
 
+### Internal Gateway API request routing communication
 
-- Gateway API request routing
+_Note that Gateway API, in this context, is one of my applications, not the Kubernetes Gateway API object_
 
-
+```txt
 curl -X POST http://gateway-api-svc/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+```
 
+```txt
 curl -X POST http://gateway-api-svc/accounts/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3"}'
+```
 
+```txt
 curl -X GET http://gateway-api-svc/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
+```
 
 
+### External access through Cloudflare Tunnel
 
-- External access through Cloudflare Tunnel
 
-
+```txt
 curl -X POST https://gateway.hidden_domain/users/register -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3","Email": "my.dummy.email2@test.com" }'
+```
 
+```txt
 curl -X POST https://gateway.hidden_domain/accounts/authenticate -H "Accept: application/json" -H "Content-Type: application/json" -d '{"Username": "usern5ame5","Password": "g!ycuWir3g!ycuWir3"}'
+```
 
+```txt
 curl -X GET https://gateway.hidden_domain/search/users -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuM2FtZTMiLCJuYW1laWQiOiI1OGFmNjNhMS0zYTA5LTRiNjMtODRkNC1iNzEzZWI1M2ZmYzYiLCJzZXNzaW9uaWQiOiJmNWJiNmJmNC02MDI5LTQ4ZWUtYmQxZS04ZTQwZDBjODEzOTkiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTc3OTU0OTgxMywiZXhwIjoxNzc5NjExMjUzLCJpYXQiOjE3Nzk1NDk4MTMsImlzcyI6InByb2dyYW1taW5ncHJvamVjdHMiLCJhdWQiOiJyZXN0cmljdGVkIn0.oowm25GXEFGroW3WmtfgMfFi9kciUNRa2eE75SChlFs"
-
-
+```
 
 ---
 
@@ -352,6 +390,8 @@ Application secrets are currently stored as standard Kubernetes Secret resources
 
 Future improvements may include implementing Sealed Secrets, SOPS, or an External Secrets solution to ensure secret values are encrypted or retrieved from a dedicated secret management system before deployment.
 
+Also encryption at rest is to be considered for a future improvement of the cluster.
+
 
 ---
 
@@ -360,5 +400,7 @@ Future improvements may include implementing Sealed Secrets, SOPS, or an Externa
 Additional project updates and implementation details are periodically shared on LinkedIn.
 
 
+Here is presented the 4 nodes cluster target on this Github repository and others to it related.
 
-![Cluster](./images/cluster_setup.jpg)
+
+![Cluster](./images/my_4_nodes_cluster.png)
